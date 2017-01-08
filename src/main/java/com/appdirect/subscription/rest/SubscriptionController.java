@@ -15,7 +15,7 @@ import com.appdirect.subscription.service.CreateSubscription;
 import com.google.common.base.Strings;
 
 @RestController
-@RequestMapping("/subscription")
+@RequestMapping("/subscriptions")
 public class SubscriptionController {
 
    private final RequestValidator requestValidator;

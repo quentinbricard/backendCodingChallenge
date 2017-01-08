@@ -17,7 +17,7 @@ public class SubscriptionControllerTest {
    
    private static final String DUMMY = "dummy";
    private static final String EVENT_URL_PARAM = "eventUrl";
-   private static final String SUBSCRIPTION_PATH = "/subscription";
+   private static final String SUBSCRIPTION_PATH = "/subscriptions";
    private static final String CREATE_PATH = "/create";
    private static final String CREATE_SUBSCRIPTION_PATH = SUBSCRIPTION_PATH + CREATE_PATH;
 
