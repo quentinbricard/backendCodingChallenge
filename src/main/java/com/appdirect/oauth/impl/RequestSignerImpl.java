@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import com.appdirect.oauth.RequestSigner;
 import com.appdirect.oauth.exception.OAuthException;
@@ -21,10 +21,10 @@ import oauth.signpost.exception.OAuthExpectationFailedException;
 import oauth.signpost.exception.OAuthMessageSignerException;
 
 @PropertySource("classpath:oauth.properties")
-@Service
-public class RequestSignerService implements RequestSigner {
+@Component
+public class RequestSignerImpl implements RequestSigner {
 
-   private static final Logger LOGGER = LoggerFactory.getLogger(RequestSignerService.class);
+   private static final Logger LOGGER = LoggerFactory.getLogger(RequestSignerImpl.class);
    
    @Value("${oauth.consumer.key}")
    private String oauthKey;

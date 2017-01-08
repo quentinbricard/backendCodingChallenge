@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.appdirect.oauth.RequestValidator;
+import com.appdirect.oauth.exception.OAuthException;
+import com.appdirect.subscription.entity.CreateSubscriptionResponse;
+import com.appdirect.subscription.exception.SubscriptionException;
 import com.appdirect.subscription.service.CreateSubscription;
 import com.google.common.base.Strings;
 
@@ -33,11 +36,30 @@ public class SubscriptionController {
    }
    
    @RequestMapping(path = "/create", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-   public ResponseEntity<String> createSubscription(@RequestParam("eventUrl") final String eventUrl, final Model model) {
+   public ResponseEntity<CreateSubscriptionResponse> createSubscription(@RequestParam("eventUrl") final String eventUrl, 
+         @RequestParam("oauth_consumer_key") final String oauthConsumerKey, @RequestParam("oauth_nonce") final String oauthNonce, 
+         @RequestParam("oauth_signature") final String oauthSignature, @RequestParam("oauth_signature_method") final String oauthSignatureMethod, 
+         @RequestParam("oauth_timestamp") final String oauthTimestamp, @RequestParam("oauth_version") final String oauthVersion, final Model model) {
+      
+      CreateSubscriptionResponse createSubscriptionResponse;
       if(Strings.isNullOrEmpty(eventUrl)) {
-         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+         createSubscriptionResponse = new CreateSubscriptionResponse("", null, "", "Event url is null");
+         return new ResponseEntity<CreateSubscriptionResponse>(createSubscriptionResponse, HttpStatus.OK);
       }
-      createSubscription.createSubscription(eventUrl);
+      
+      try {
+         requestValidator.validateOauthParameters(oauthConsumerKey, oauthNonce, oauthSignature, oauthSignatureMethod, oauthTimestamp, oauthVersion);
+      } catch(OAuthException e) {
+         createSubscriptionResponse = new CreateSubscriptionResponse(false, null, "", "Error during oauth validation");
+         return new ResponseEntity<CreateSubscriptionResponse>(createSubscriptionResponse, HttpStatus.OK);
+      }
+      
+      try {
+         createSubscription.createSubscription(eventUrl);
+      } catch(SubscriptionException e) {
+         createSubscriptionResponse = new CreateSubscriptionResponse(false, null, "", "Error during subscription creation");
+         return new ResponseEntity<CreateSubscriptionResponse>(createSubscriptionResponse, HttpStatus.OK);
+      }
       return new ResponseEntity<>(HttpStatus.OK);
    }
 
