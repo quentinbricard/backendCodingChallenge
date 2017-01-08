@@ -19,19 +19,19 @@ import com.appdirect.oauth.account.entity.AccountStatus;
 import com.appdirect.oauth.account.repository.AccountRepository;
 import com.appdirect.subscription.entity.json.DetailsSubscription;
 import com.appdirect.subscription.exception.SubscriptionException;
-import com.appdirect.subscription.service.CreateSubscription;
+import com.appdirect.subscription.service.CancelSubscription;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.net.HttpHeaders;
 
 /**
- * <p>Service in charge of creating a subscription from a simple URL.</p>
+ * <p>Service in charge of canceling a subscription from a simple URL.</p>
  * @author quentinbricard
  *
  */
 @Service
-public class CreateSubscriptionService implements CreateSubscription {
+public class CancelSubscriptionService implements CancelSubscription {
    
-   private static final Logger LOGGER = LoggerFactory.getLogger(CreateSubscriptionService.class);
+   private static final Logger LOGGER = LoggerFactory.getLogger(CancelSubscriptionService.class);
    
    private final RequestSigner requestSigner;
    private final AccountRepository accountRepository;
@@ -39,17 +39,17 @@ public class CreateSubscriptionService implements CreateSubscription {
    private final ObjectMapper mapper = new ObjectMapper();
    
    @Autowired
-   public CreateSubscriptionService(final RequestSigner requestSigner, final AccountRepository accountRepository) {
+   public CancelSubscriptionService(final RequestSigner requestSigner, final AccountRepository accountRepository) {
       this.requestSigner = requestSigner;
       this.accountRepository = accountRepository;
    }
    
    /*
     * (non-Javadoc)
-    * @see com.appdirect.subscription.service.CreateSubscription#createSubscription(java.lang.String)
+    * @see com.appdirect.subscription.service.CancelSubscription#cancelSubscription(java.lang.String)
     */
    @Override
-   public Account createSubscription(String eventUrl) {
+   public Account cancelSubscription(String eventUrl) {
 
       HttpURLConnection connection = requestSigner.getSignedConnection(eventUrl);
       // Always manipulate Json
@@ -81,8 +81,13 @@ public class CreateSubscriptionService implements CreateSubscription {
       } catch(IOException e) {
          throw new SubscriptionException(ACTION, "Error mapping json " + responseData + " to object", e);
       }
-      // Create account from json
-      Account account = new Account(detailsSubscription.getPayload().getCompany().getName(), AccountStatus.FREE_TRIAL.getStatus());
+      // retrieve account
+      String accountIdentifier = detailsSubscription.getPayload().getAccount().getAccountIdentifier();
+      Account account = accountRepository.findById(accountIdentifier);
+      if(account == null) {
+         throw new SubscriptionException(ACTION, "Account with identifier " + accountIdentifier + " has not been found");
+      }
+      account.setStatus(AccountStatus.CANCELED.getStatus());
       accountRepository.save(account);
       return account;
    }

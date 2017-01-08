@@ -19,7 +19,7 @@ public class Payload {
    @JsonProperty("company")
    private Company company;
    @JsonProperty("account")
-   private Object account;
+   private Account account;
    @JsonProperty("addonInstance")
    private Object addonInstance;
    @JsonProperty("addonBinding")
@@ -54,12 +54,12 @@ public class Payload {
    }
 
    @JsonProperty("account")
-   public Object getAccount() {
+   public Account getAccount() {
       return account;
    }
 
    @JsonProperty("account")
-   public void setAccount(Object account) {
+   public void setAccount(Account account) {
       this.account = account;
    }
 

@@ -7,5 +7,5 @@ import com.appdirect.oauth.account.entity.Account;
 
 @Repository
 public interface AccountRepository extends JpaRepository<Account, String> {
-   
+   Account findById(String id);
 }
