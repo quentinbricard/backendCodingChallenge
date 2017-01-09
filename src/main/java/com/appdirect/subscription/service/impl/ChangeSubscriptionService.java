@@ -8,23 +8,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.appdirect.oauth.account.entity.Account;
-import com.appdirect.oauth.account.entity.AccountStatus;
 import com.appdirect.oauth.account.repository.AccountRepository;
 import com.appdirect.subscription.entity.json.DetailsSubscription;
 import com.appdirect.subscription.exception.SubscriptionException;
-import com.appdirect.subscription.service.CreateSubscription;
+import com.appdirect.subscription.service.ChangeSubscription;
 import com.appdirect.subscription.service.RequestHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * <p>Service in charge of creating a subscription from a simple URL.</p>
+ * <p>Service in charge of changing a subscription from a simple URL.</p>
  * @author quentinbricard
  *
  */
 @Service
-public class CreateSubscriptionService implements CreateSubscription {
+public class ChangeSubscriptionService implements ChangeSubscription {
    
-   private static final Logger LOGGER = LoggerFactory.getLogger(CreateSubscriptionService.class);
+   private static final Logger LOGGER = LoggerFactory.getLogger(ChangeSubscriptionService.class);
    
    private final RequestHandler requestHandler;
    private final AccountRepository accountRepository;
@@ -32,21 +31,21 @@ public class CreateSubscriptionService implements CreateSubscription {
    private final ObjectMapper mapper = new ObjectMapper();
    
    @Autowired
-   public CreateSubscriptionService(final RequestHandler requestHandler, final AccountRepository accountRepository) {
+   public ChangeSubscriptionService(final RequestHandler requestHandler, final AccountRepository accountRepository) {
       this.requestHandler = requestHandler;
       this.accountRepository = accountRepository;
    }
-   
+
    /*
     * (non-Javadoc)
-    * @see com.appdirect.subscription.service.CreateSubscription#createSubscription(java.lang.String)
+    * @see com.appdirect.subscription.service.ChangeSubscription#changeSubscription(java.lang.String)
     */
    @Override
-   public Account createSubscription(String eventUrl) {
+   public Account changeSubscription(String eventUrl) {
 
       // Call URL
       String responseData = requestHandler.executeRequest(ACTION, eventUrl);
-      
+
       // Map json to object
       DetailsSubscription detailsSubscription = null;
       try {
@@ -54,10 +53,15 @@ public class CreateSubscriptionService implements CreateSubscription {
       } catch(IOException e) {
          throw new SubscriptionException(ACTION, "Error mapping json " + responseData + " to object", e);
       }
-      // Create account from json
-      Account account = new Account(detailsSubscription.getPayload().getCompany().getName(), AccountStatus.FREE_TRIAL.getStatus());
+      // retrieve account
+      String accountIdentifier = detailsSubscription.getPayload().getAccount().getAccountIdentifier();
+      Account account = accountRepository.findById(accountIdentifier);
+      if(account == null) {
+         throw new SubscriptionException(ACTION, "Account with identifier " + accountIdentifier + " has not been found");
+      }
+//      account.setStatus(AccountStatus.CANCELED.getStatus());
       accountRepository.save(account);
-      LOGGER.debug("Account {} saved successfully", account.getName());
+      LOGGER.debug("Account {} changed successfully", account.getName());
       return account;
    }
 

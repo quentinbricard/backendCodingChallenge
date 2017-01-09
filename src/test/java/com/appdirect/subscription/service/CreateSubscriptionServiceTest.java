@@ -5,7 +5,6 @@ import static org.mockito.Mockito.mock;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.appdirect.oauth.RequestSigner;
 import com.appdirect.oauth.account.repository.AccountRepository;
 import com.appdirect.subscription.service.impl.CreateSubscriptionService;
 
@@ -15,14 +14,14 @@ public class CreateSubscriptionServiceTest {
    
    private CreateSubscription createSubscription;
    
-   private RequestSigner requestSignerMock;
+   private RequestHandler requestHandlerMock;
    private AccountRepository accountRepositoryMock;
    
    @Before
    public void setUp() {
-      requestSignerMock = mock(RequestSigner.class);
+      requestHandlerMock = mock(RequestHandler.class);
       accountRepositoryMock = mock(AccountRepository.class);
-      createSubscription = new CreateSubscriptionService(requestSignerMock, accountRepositoryMock);  
+      createSubscription = new CreateSubscriptionService(requestHandlerMock, accountRepositoryMock);  
    }
    
    @Test

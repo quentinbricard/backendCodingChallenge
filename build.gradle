@@ -16,7 +16,8 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'war'
 
 war {
-	baseName = 'backendCodingChallenge'
+    archiveName = 'backendcodingchallenge.war'
+	baseName = 'backendcodingchallenge'
 	version = '0.0.1-SNAPSHOT'
 }
 
@@ -33,9 +34,14 @@ configurations {
 dependencies {
 	compile 'org.springframework.boot:spring-boot-starter-data-jpa'
 	compile 'org.springframework.boot:spring-boot-starter-web'
+	compile 'org.springframework.boot:spring-boot-starter-security'
 	compile 'oauth.signpost:signpost-core:1.2.1.2'
 	compile 'com.h2database:h2:1.4.193'
 	compile 'com.google.guava:guava:20.0'
+	compile 'com.sun.jersey.contribs.jersey-oauth:oauth-signature:1.9.1'
+	compile 'com.sun.jersey.contribs.jersey-oauth:oauth-server:1.9.1'
+	compile 'com.sun.jersey:jersey-server:1.9.1'
+	compile 'javax.ws.rs:javax.ws.rs-api:2.0'
 	providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }

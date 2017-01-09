@@ -28,6 +28,7 @@ public class RequestSignerImpl implements RequestSigner {
    
    @Value("${oauth.consumer.key}")
    private String oauthKey;
+   
    @Value("${oauth.consumer.secret}")
    private String oauthSecret;
    

@@ -1,27 +1,20 @@
 package com.appdirect.subscription.service.impl;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.util.FileCopyUtils;
 
-import com.appdirect.oauth.RequestSigner;
 import com.appdirect.oauth.account.entity.Account;
 import com.appdirect.oauth.account.entity.AccountStatus;
 import com.appdirect.oauth.account.repository.AccountRepository;
 import com.appdirect.subscription.entity.json.DetailsSubscription;
 import com.appdirect.subscription.exception.SubscriptionException;
 import com.appdirect.subscription.service.CancelSubscription;
+import com.appdirect.subscription.service.RequestHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.net.HttpHeaders;
 
 /**
  * <p>Service in charge of canceling a subscription from a simple URL.</p>
@@ -33,14 +26,14 @@ public class CancelSubscriptionService implements CancelSubscription {
    
    private static final Logger LOGGER = LoggerFactory.getLogger(CancelSubscriptionService.class);
    
-   private final RequestSigner requestSigner;
+   private final RequestHandler requestHandler;
    private final AccountRepository accountRepository;
    
    private final ObjectMapper mapper = new ObjectMapper();
    
    @Autowired
-   public CancelSubscriptionService(final RequestSigner requestSigner, final AccountRepository accountRepository) {
-      this.requestSigner = requestSigner;
+   public CancelSubscriptionService(final RequestHandler requestHandler, final AccountRepository accountRepository) {
+      this.requestHandler = requestHandler;
       this.accountRepository = accountRepository;
    }
    
@@ -51,28 +44,8 @@ public class CancelSubscriptionService implements CancelSubscription {
    @Override
    public Account cancelSubscription(String eventUrl) {
 
-      HttpURLConnection connection = requestSigner.getSignedConnection(eventUrl);
-      // Always manipulate Json
-      connection.setRequestProperty(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
-      String responseData = null;
-      try {
-         connection.connect();
-         int code = connection.getResponseCode();
-         if(code != HttpStatus.OK.value()) {
-            LOGGER.error("Code {} different than {} excepted", code, HttpStatus.OK.value());
-            return null;
-         }
-         // To close automatically the streams
-         try(InputStream inputStream = connection.getInputStream();
-             ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-            // Actual copy
-            FileCopyUtils.copy(inputStream, outputStream);
-            responseData = new String(outputStream.toByteArray());
-            LOGGER.debug("Response: {}", responseData);
-         }
-      } catch(IOException e) {
-         throw new SubscriptionException(ACTION, "Error connection to URL " + eventUrl, e);
-      }
+      // Call URL
+      String responseData = requestHandler.executeRequest(ACTION, eventUrl);
             
       // Map json to object
       DetailsSubscription detailsSubscription = null;
@@ -89,6 +62,7 @@ public class CancelSubscriptionService implements CancelSubscription {
       }
       account.setStatus(AccountStatus.CANCELED.getStatus());
       accountRepository.save(account);
+      LOGGER.debug("Account {} canceled successfully", account.getName());
       return account;
    }
 

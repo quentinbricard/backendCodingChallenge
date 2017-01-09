@@ -10,11 +10,11 @@ public interface CancelSubscription {
     * <p>Cancels a subscription with a given URL:
     * <ol>
     * <li>Performs a HTTP call to this URL in order to get details.</li>
-    * <li>Cancel and save the account associated to the retrieved information.</li>
+    * <li>Cancels and saves the account associated to the retrieved information.</li>
     * </ol> 
     * </p>
     * @param eventUrl
-    * @return
+    * @return the canceled {@link Account}
     */
    Account cancelSubscription(String eventUrl);
 }

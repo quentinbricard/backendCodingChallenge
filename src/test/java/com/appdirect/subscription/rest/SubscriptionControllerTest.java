@@ -9,8 +9,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import com.appdirect.oauth.RequestValidator;
 import com.appdirect.subscription.service.CancelSubscription;
+import com.appdirect.subscription.service.ChangeSubscription;
 import com.appdirect.subscription.service.CreateSubscription;
 
 @SpringBootTest
@@ -23,16 +23,16 @@ public class SubscriptionControllerTest {
    private static final String CREATE_SUBSCRIPTION_PATH = SUBSCRIPTION_PATH + CREATE_PATH;
 
    private MockMvc mockMvc;
-   private RequestValidator requestValidatorMock;
    private CreateSubscription createSubscriptionMock;
    private CancelSubscription cancelSubscriptionMock;
+   private ChangeSubscription changeSubscriptionMock;
    
    @Before
    public void setup() {
-      requestValidatorMock = Mockito.mock(RequestValidator.class);
       createSubscriptionMock = Mockito.mock(CreateSubscription.class);
       cancelSubscriptionMock = Mockito.mock(CancelSubscription.class);
-      SubscriptionController subscriptionController = new SubscriptionController(requestValidatorMock, createSubscriptionMock, cancelSubscriptionMock);
+      changeSubscriptionMock = Mockito.mock(ChangeSubscription.class);
+      SubscriptionController subscriptionController = new SubscriptionController(createSubscriptionMock, cancelSubscriptionMock, changeSubscriptionMock);
       mockMvc = MockMvcBuilders.standaloneSetup(subscriptionController).build();
    }
  
