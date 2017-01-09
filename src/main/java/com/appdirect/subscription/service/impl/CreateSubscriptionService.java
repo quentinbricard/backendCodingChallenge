@@ -57,7 +57,7 @@ public class CreateSubscriptionService implements CreateSubscription {
       // Create account from json
       Account account = new Account(detailsSubscription.getPayload().getCompany().getName(), AccountStatus.FREE_TRIAL.getStatus());
       accountRepository.save(account);
-      LOGGER.debug("Account {} saved successfully", account.getName());
+      LOGGER.debug("Account '{}' saved successfully", account.getName());
       return account;
    }
 

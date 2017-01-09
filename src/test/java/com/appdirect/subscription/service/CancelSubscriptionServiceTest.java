@@ -20,23 +20,23 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import com.appdirect.oauth.account.entity.Account;
 import com.appdirect.oauth.account.entity.AccountStatus;
 import com.appdirect.oauth.account.repository.AccountRepository;
-import com.appdirect.subscription.entity.json.Company;
 import com.appdirect.subscription.entity.json.DetailsSubscription;
 import com.appdirect.subscription.entity.json.Payload;
 import com.appdirect.subscription.exception.SubscriptionException;
-import com.appdirect.subscription.service.impl.CreateSubscriptionService;
+import com.appdirect.subscription.service.impl.CancelSubscriptionService;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(CreateSubscriptionService.class)
-public class CreateSubscriptionServiceTest {
+@PrepareForTest(CancelSubscriptionService.class)
+public class CancelSubscriptionServiceTest {
 
+   private static final String ACCOUNT_ID = "accountId";
    private static final String COMPANY_NAME = "company";
    private static final String DUMMY_URL = "DUMMY_URL";
    
-   private CreateSubscription createSubscription;
+   private CancelSubscription cancelSubscription;
    
    private RequestHandler requestHandlerMock;
    private AccountRepository accountRepositoryMock;
@@ -51,27 +51,29 @@ public class CreateSubscriptionServiceTest {
       requestHandlerMock = mock(RequestHandler.class);
       accountRepositoryMock = mock(AccountRepository.class);
       whenNew(ObjectMapper.class).withNoArguments().thenReturn(mapperMock);
-      createSubscription = new CreateSubscriptionService(requestHandlerMock, accountRepositoryMock);
+      cancelSubscription = new CancelSubscriptionService(requestHandlerMock, accountRepositoryMock);
       
       detailsSubscription = new DetailsSubscription();
       Payload payload = new Payload();
-      Company company = new Company();
-      company.setName(COMPANY_NAME);
-      payload.setCompany(company);
+      com.appdirect.subscription.entity.json.Account account = new com.appdirect.subscription.entity.json.Account();
+      account.setAccountIdentifier(ACCOUNT_ID);
+      payload.setAccount(account);
       detailsSubscription.setPayload(payload);
    }
    
    @Test
-   public void testCreationSuccessful() throws JsonParseException, JsonMappingException, IOException {
+   public void testCancelSuccessful() throws JsonParseException, JsonMappingException, IOException {
+      Account account = new Account(COMPANY_NAME, AccountStatus.FREE_TRIAL.getStatus());
+      when(accountRepositoryMock.findById(ACCOUNT_ID)).thenReturn(account);
       // Declare response as a String so the right signature is found
       String response = null;
       when(mapperMock.readValue(response, DetailsSubscription.class)).thenReturn(detailsSubscription);
-      Account account = createSubscription.createSubscription(DUMMY_URL);
-      assertNotNull(account);
+      Account accountResult = cancelSubscription.cancelSubscription(DUMMY_URL);
+      assertNotNull(accountResult);
       // Since repository is not actually called
       assertNull(account.getId());
       assertEquals(COMPANY_NAME, account.getName());
-      assertEquals(AccountStatus.FREE_TRIAL.getStatus(), account.getStatus());
+      assertEquals(AccountStatus.CANCELED.getStatus(), account.getStatus());
    }
    
    @SuppressWarnings("unchecked")
@@ -81,10 +83,23 @@ public class CreateSubscriptionServiceTest {
       String response = null;
       when(mapperMock.readValue(response, DetailsSubscription.class)).thenThrow(IOException.class);
       try {
-         createSubscription.createSubscription(DUMMY_URL);
+         cancelSubscription.cancelSubscription(DUMMY_URL);
          fail("An exception should have occured");
       } catch(SubscriptionException e) {
-         assertEquals(CreateSubscription.ACTION, e.getAction());
+         assertEquals(CancelSubscription.ACTION, e.getAction());
+      }
+   }
+   
+   @Test
+   public void testNoAccountFound() throws JsonParseException, JsonMappingException, IOException {
+      // Declare response as a String so the right signature is found
+      String response = null;
+      when(mapperMock.readValue(response, DetailsSubscription.class)).thenReturn(detailsSubscription);
+      try {
+         cancelSubscription.cancelSubscription(DUMMY_URL);
+         fail("An exception should have occured");
+      } catch(SubscriptionException e) {
+         assertEquals(CancelSubscription.ACTION, e.getAction());
       }
    }
 }
