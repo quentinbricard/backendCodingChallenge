@@ -106,7 +106,7 @@ public class SubscriptionController {
          return new ResponseEntity<>(changeSubscriptionResponse, HttpStatus.OK);
       }
       changeSubscriptionResponse = new SubscriptionResponse(true, account.getId(), null, "Account changed successfully");
-      return new ResponseEntity<>(HttpStatus.OK);
+      return new ResponseEntity<>(changeSubscriptionResponse, HttpStatus.OK);
    }
 
 }
