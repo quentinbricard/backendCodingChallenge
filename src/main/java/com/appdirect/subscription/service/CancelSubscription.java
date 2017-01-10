@@ -1,6 +1,6 @@
 package com.appdirect.subscription.service;
 
-import com.appdirect.account.entity.AccountEntity;
+import com.appdirect.model.account.entity.AccountEntity;
 
 @FunctionalInterface
 public interface CancelSubscription {

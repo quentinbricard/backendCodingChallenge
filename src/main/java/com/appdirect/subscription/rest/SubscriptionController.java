@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.appdirect.account.entity.AccountEntity;
+import com.appdirect.model.account.entity.AccountEntity;
 import com.appdirect.subscription.entity.SubscriptionResponse;
 import com.appdirect.subscription.exception.SubscriptionException;
 import com.appdirect.subscription.service.CancelSubscription;

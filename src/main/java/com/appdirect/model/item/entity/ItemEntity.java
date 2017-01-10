@@ -1,4 +1,4 @@
-package com.appdirect.account.entity;
+package com.appdirect.model.item.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,23 +9,23 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-@Table(name="accounts")
-public class AccountEntity {
+@Table(name="items")
+public class ItemEntity {
 
    private String id;
-   private String name;
-   private int status;
+   private int quantity;
+   private String unit;
    
    /**
     * Empty constructor
     */
-   public AccountEntity() {
+   public ItemEntity() {
       // no-op
    }
 
-   public AccountEntity(String name, int status) {
-      this.name = name;
-      this.status = status;
+   public ItemEntity(int quantity, String unit) {
+      this.quantity = quantity;
+      this.unit = unit;
    }
 
    @Id
@@ -39,22 +39,23 @@ public class AccountEntity {
    public void setId(String id) {
       this.id = id;
    }
-   
+
    @Column
-   public String getName() {
-      return name;
+   public int getQuantity() {
+      return quantity;
    }
-   
-   public void setName(String name) {
-      this.name = name;
+
+   public void setQuantity(int quantity) {
+      this.quantity = quantity;
    }
 
    @Column
-   public int getStatus() {
-      return status;
+   public String getUnit() {
+      return unit;
    }
 
-   public void setStatus(int status) {
-      this.status = status;
+   public void setUnit(String unit) {
+      this.unit = unit;
    }
+   
 }

@@ -17,9 +17,9 @@ import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import com.appdirect.account.entity.AccountEntity;
-import com.appdirect.account.entity.AccountStatus;
-import com.appdirect.account.repository.AccountRepository;
+import com.appdirect.model.account.entity.AccountEntity;
+import com.appdirect.model.account.entity.AccountStatus;
+import com.appdirect.model.account.repository.AccountRepository;
 import com.appdirect.subscription.entity.json.Company;
 import com.appdirect.subscription.entity.json.DetailsSubscription;
 import com.appdirect.subscription.entity.json.Payload;

@@ -7,10 +7,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.appdirect.account.entity.AccountEntity;
-import com.appdirect.account.entity.AccountStatus;
-import com.appdirect.account.repository.AccountRepository;
+import com.appdirect.model.account.entity.AccountEntity;
+import com.appdirect.model.account.entity.AccountStatus;
+import com.appdirect.model.account.repository.AccountRepository;
+import com.appdirect.model.item.entity.ItemEntity;
+import com.appdirect.model.order.entity.OrderEntity;
 import com.appdirect.subscription.entity.json.DetailsSubscription;
+import com.appdirect.subscription.entity.json.Item;
+import com.appdirect.subscription.entity.json.Order;
 import com.appdirect.subscription.exception.SubscriptionException;
 import com.appdirect.subscription.service.CreateSubscription;
 import com.appdirect.subscription.service.RequestHandler;
@@ -56,6 +60,13 @@ public class CreateSubscriptionService implements CreateSubscription {
       }
       // Create account from json
       AccountEntity account = new AccountEntity(detailsSubscription.getPayload().getCompany().getName(), AccountStatus.FREE_TRIAL.getStatus());
+      Order order = detailsSubscription.getPayload().getOrder();
+      OrderEntity orderEntity = new OrderEntity(order.getEditionCode(), order.getEditionCode());
+      for(Item item: order.getItems()) {
+         ItemEntity itemEntity = new ItemEntity(item.getQuantity(), item.getUnit());
+         orderEntity.getItems().add(itemEntity);
+      }
+      account.setOrder(orderEntity);
       accountRepository.save(account);
       LOGGER.debug("Account '{}' saved successfully", account.getName());
       return account;

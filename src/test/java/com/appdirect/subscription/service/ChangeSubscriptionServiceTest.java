@@ -23,20 +23,20 @@ import com.appdirect.model.account.repository.AccountRepository;
 import com.appdirect.subscription.entity.json.DetailsSubscription;
 import com.appdirect.subscription.entity.json.Payload;
 import com.appdirect.subscription.exception.SubscriptionException;
-import com.appdirect.subscription.service.impl.CancelSubscriptionService;
+import com.appdirect.subscription.service.impl.ChangeSubscriptionService;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(CancelSubscriptionService.class)
-public class CancelSubscriptionServiceTest {
+@PrepareForTest(ChangeSubscription.class)
+public class ChangeSubscriptionServiceTest {
 
    private static final String ACCOUNT_ID = "accountId";
    private static final String COMPANY_NAME = "company";
    private static final String DUMMY_URL = "DUMMY_URL";
    
-   private CancelSubscription cancelSubscription;
+   private ChangeSubscription changeSubscription;
    
    private RequestHandler requestHandlerMock;
    private AccountRepository accountRepositoryMock;
@@ -51,7 +51,7 @@ public class CancelSubscriptionServiceTest {
       requestHandlerMock = mock(RequestHandler.class);
       accountRepositoryMock = mock(AccountRepository.class);
       whenNew(ObjectMapper.class).withNoArguments().thenReturn(mapperMock);
-      cancelSubscription = new CancelSubscriptionService(requestHandlerMock, accountRepositoryMock);
+      changeSubscription = new ChangeSubscriptionService(requestHandlerMock, accountRepositoryMock);
       
       detailsSubscription = new DetailsSubscription();
       Payload payload = new Payload();
@@ -62,13 +62,13 @@ public class CancelSubscriptionServiceTest {
    }
    
    @Test
-   public void testCancelSuccessful() throws JsonParseException, JsonMappingException, IOException {
+   public void testChangeSuccessful() throws JsonParseException, JsonMappingException, IOException {
       AccountEntity account = new AccountEntity(COMPANY_NAME, AccountStatus.FREE_TRIAL.getStatus());
       when(accountRepositoryMock.findById(ACCOUNT_ID)).thenReturn(account);
       // Declare response as a String so the right signature is found
       String response = null;
       when(mapperMock.readValue(response, DetailsSubscription.class)).thenReturn(detailsSubscription);
-      AccountEntity accountResult = cancelSubscription.cancelSubscription(DUMMY_URL);
+      AccountEntity accountResult = changeSubscription.changeSubscription(DUMMY_URL);
       assertNotNull(accountResult);
       // Since repository is not actually called
       assertNull(account.getId());
@@ -83,10 +83,10 @@ public class CancelSubscriptionServiceTest {
       String response = null;
       when(mapperMock.readValue(response, DetailsSubscription.class)).thenThrow(IOException.class);
       try {
-         cancelSubscription.cancelSubscription(DUMMY_URL);
+         changeSubscription.changeSubscription(DUMMY_URL);
          fail("An exception should have occured");
       } catch(SubscriptionException e) {
-         assertEquals(CancelSubscription.ACTION, e.getAction());
+         assertEquals(ChangeSubscription.ACTION, e.getAction());
       }
    }
    
@@ -96,10 +96,10 @@ public class CancelSubscriptionServiceTest {
       String response = null;
       when(mapperMock.readValue(response, DetailsSubscription.class)).thenReturn(detailsSubscription);
       try {
-         cancelSubscription.cancelSubscription(DUMMY_URL);
+         changeSubscription.changeSubscription(DUMMY_URL);
          fail("An exception should have occured");
       } catch(SubscriptionException e) {
-         assertEquals(CancelSubscription.ACTION, e.getAction());
+         assertEquals(ChangeSubscription.ACTION, e.getAction());
       }
    }
 }

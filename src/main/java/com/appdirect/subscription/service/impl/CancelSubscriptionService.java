@@ -7,9 +7,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.appdirect.account.entity.AccountEntity;
-import com.appdirect.account.entity.AccountStatus;
-import com.appdirect.account.repository.AccountRepository;
+import com.appdirect.model.account.entity.AccountEntity;
+import com.appdirect.model.account.entity.AccountStatus;
+import com.appdirect.model.account.repository.AccountRepository;
 import com.appdirect.subscription.entity.json.DetailsSubscription;
 import com.appdirect.subscription.exception.SubscriptionException;
 import com.appdirect.subscription.service.CancelSubscription;
