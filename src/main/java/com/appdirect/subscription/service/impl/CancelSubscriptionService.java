@@ -7,9 +7,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.appdirect.oauth.account.entity.Account;
-import com.appdirect.oauth.account.entity.AccountStatus;
-import com.appdirect.oauth.account.repository.AccountRepository;
+import com.appdirect.account.entity.AccountEntity;
+import com.appdirect.account.entity.AccountStatus;
+import com.appdirect.account.repository.AccountRepository;
 import com.appdirect.subscription.entity.json.DetailsSubscription;
 import com.appdirect.subscription.exception.SubscriptionException;
 import com.appdirect.subscription.service.CancelSubscription;
@@ -42,7 +42,7 @@ public class CancelSubscriptionService implements CancelSubscription {
     * @see com.appdirect.subscription.service.CancelSubscription#cancelSubscription(java.lang.String)
     */
    @Override
-   public Account cancelSubscription(String eventUrl) {
+   public AccountEntity cancelSubscription(String eventUrl) {
 
       // Call URL
       String responseData = requestHandler.executeRequest(ACTION, eventUrl);
@@ -56,7 +56,7 @@ public class CancelSubscriptionService implements CancelSubscription {
       }
       // retrieve account
       String accountIdentifier = detailsSubscription.getPayload().getAccount().getAccountIdentifier();
-      Account account = accountRepository.findById(accountIdentifier);
+      AccountEntity account = accountRepository.findById(accountIdentifier);
       if(account == null) {
          throw new SubscriptionException(ACTION, "Account with identifier " + accountIdentifier + " has not been found");
       }

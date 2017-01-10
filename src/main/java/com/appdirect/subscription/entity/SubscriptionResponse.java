@@ -34,7 +34,6 @@ public class SubscriptionResponse {
     */
    public SubscriptionResponse(String success, String accountIdentifier, String errorCode, String message) {
       Preconditions.checkNotNull(success, "success field must not be null");
-      Preconditions.checkNotNull(accountIdentifier, "accountIdentifier must not be null");
       this.success = success;
       this.accountIdentifier = accountIdentifier;
       this.errorCode = errorCode;

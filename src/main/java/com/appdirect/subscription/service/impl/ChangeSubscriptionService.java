@@ -7,8 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.appdirect.oauth.account.entity.Account;
-import com.appdirect.oauth.account.repository.AccountRepository;
+import com.appdirect.account.entity.AccountEntity;
+import com.appdirect.account.repository.AccountRepository;
 import com.appdirect.subscription.entity.json.DetailsSubscription;
 import com.appdirect.subscription.exception.SubscriptionException;
 import com.appdirect.subscription.service.ChangeSubscription;
@@ -41,7 +41,7 @@ public class ChangeSubscriptionService implements ChangeSubscription {
     * @see com.appdirect.subscription.service.ChangeSubscription#changeSubscription(java.lang.String)
     */
    @Override
-   public Account changeSubscription(String eventUrl) {
+   public AccountEntity changeSubscription(String eventUrl) {
 
       // Call URL
       String responseData = requestHandler.executeRequest(ACTION, eventUrl);
@@ -55,7 +55,7 @@ public class ChangeSubscriptionService implements ChangeSubscription {
       }
       // retrieve account
       String accountIdentifier = detailsSubscription.getPayload().getAccount().getAccountIdentifier();
-      Account account = accountRepository.findById(accountIdentifier);
+      AccountEntity account = accountRepository.findById(accountIdentifier);
       if(account == null) {
          throw new SubscriptionException(ACTION, "Account with identifier " + accountIdentifier + " has not been found");
       }

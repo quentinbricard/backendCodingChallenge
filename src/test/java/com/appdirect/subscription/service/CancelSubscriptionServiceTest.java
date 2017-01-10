@@ -17,9 +17,9 @@ import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import com.appdirect.oauth.account.entity.Account;
-import com.appdirect.oauth.account.entity.AccountStatus;
-import com.appdirect.oauth.account.repository.AccountRepository;
+import com.appdirect.account.entity.AccountEntity;
+import com.appdirect.account.entity.AccountStatus;
+import com.appdirect.account.repository.AccountRepository;
 import com.appdirect.subscription.entity.json.DetailsSubscription;
 import com.appdirect.subscription.entity.json.Payload;
 import com.appdirect.subscription.exception.SubscriptionException;
@@ -63,12 +63,12 @@ public class CancelSubscriptionServiceTest {
    
    @Test
    public void testCancelSuccessful() throws JsonParseException, JsonMappingException, IOException {
-      Account account = new Account(COMPANY_NAME, AccountStatus.FREE_TRIAL.getStatus());
+      AccountEntity account = new AccountEntity(COMPANY_NAME, AccountStatus.FREE_TRIAL.getStatus());
       when(accountRepositoryMock.findById(ACCOUNT_ID)).thenReturn(account);
       // Declare response as a String so the right signature is found
       String response = null;
       when(mapperMock.readValue(response, DetailsSubscription.class)).thenReturn(detailsSubscription);
-      Account accountResult = cancelSubscription.cancelSubscription(DUMMY_URL);
+      AccountEntity accountResult = cancelSubscription.cancelSubscription(DUMMY_URL);
       assertNotNull(accountResult);
       // Since repository is not actually called
       assertNull(account.getId());

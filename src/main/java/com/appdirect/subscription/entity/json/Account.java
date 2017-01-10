@@ -10,6 +10,8 @@ public class Account {
    private String accountIdentifier;
    @JsonProperty("status")
    private String status;
+   @JsonProperty("parentAccountIdentifier")
+   private String parentAccountIdentifier;
    
    @JsonProperty("accountIdentifier")
    public String getAccountIdentifier() {
@@ -30,4 +32,15 @@ public class Account {
    public void setStatus(String status) {
       this.status = status;
    }
+
+   @JsonProperty("parentAccountIdentifier")
+   public String getParentAccountIdentifier() {
+      return parentAccountIdentifier;
+   }
+
+   @JsonProperty("parentAccountIdentifier")
+   public void setParentAccountIdentifier(String parentAccountIdentifier) {
+      this.parentAccountIdentifier = parentAccountIdentifier;
+   }
+   
 }

@@ -1,6 +1,6 @@
 package com.appdirect.subscription.service;
 
-import com.appdirect.oauth.account.entity.Account;
+import com.appdirect.account.entity.AccountEntity;
 
 @FunctionalInterface
 public interface CreateSubscription {
@@ -14,7 +14,7 @@ public interface CreateSubscription {
     * </ol> 
     * </p>
     * @param eventUrl
-    * @return the created {@link Account}
+    * @return the created {@link AccountEntity}
     */
-   Account createSubscription(String eventUrl);
+   AccountEntity createSubscription(String eventUrl);
 }

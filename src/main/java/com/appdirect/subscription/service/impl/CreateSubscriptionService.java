@@ -7,9 +7,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.appdirect.oauth.account.entity.Account;
-import com.appdirect.oauth.account.entity.AccountStatus;
-import com.appdirect.oauth.account.repository.AccountRepository;
+import com.appdirect.account.entity.AccountEntity;
+import com.appdirect.account.entity.AccountStatus;
+import com.appdirect.account.repository.AccountRepository;
 import com.appdirect.subscription.entity.json.DetailsSubscription;
 import com.appdirect.subscription.exception.SubscriptionException;
 import com.appdirect.subscription.service.CreateSubscription;
@@ -42,7 +42,7 @@ public class CreateSubscriptionService implements CreateSubscription {
     * @see com.appdirect.subscription.service.CreateSubscription#createSubscription(java.lang.String)
     */
    @Override
-   public Account createSubscription(String eventUrl) {
+   public AccountEntity createSubscription(String eventUrl) {
 
       // Call URL
       String responseData = requestHandler.executeRequest(ACTION, eventUrl);
@@ -55,7 +55,7 @@ public class CreateSubscriptionService implements CreateSubscription {
          throw new SubscriptionException(ACTION, "Error mapping json " + responseData + " to object", e);
       }
       // Create account from json
-      Account account = new Account(detailsSubscription.getPayload().getCompany().getName(), AccountStatus.FREE_TRIAL.getStatus());
+      AccountEntity account = new AccountEntity(detailsSubscription.getPayload().getCompany().getName(), AccountStatus.FREE_TRIAL.getStatus());
       accountRepository.save(account);
       LOGGER.debug("Account '{}' saved successfully", account.getName());
       return account;

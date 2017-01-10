@@ -1,4 +1,4 @@
-package com.appdirect.oauth.account.entity;
+package com.appdirect.account.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,7 +10,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name="accounts")
-public class Account {
+public class AccountEntity {
 
    private String id;
    private String name;
@@ -19,11 +19,11 @@ public class Account {
    /**
     * Empty constructor
     */
-   public Account() {
+   public AccountEntity() {
       // no-op
    }
 
-   public Account(String name, int status) {
+   public AccountEntity(String name, int status) {
       this.name = name;
       this.status = status;
    }

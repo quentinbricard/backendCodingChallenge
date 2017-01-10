@@ -1,6 +1,6 @@
 package com.appdirect.subscription.service;
 
-import com.appdirect.oauth.account.entity.Account;
+import com.appdirect.account.entity.AccountEntity;
 
 @FunctionalInterface
 public interface CancelSubscription {
@@ -14,7 +14,7 @@ public interface CancelSubscription {
     * </ol> 
     * </p>
     * @param eventUrl
-    * @return the canceled {@link Account}
+    * @return the canceled {@link AccountEntity}
     */
-   Account cancelSubscription(String eventUrl);
+   AccountEntity cancelSubscription(String eventUrl);
 }

@@ -17,9 +17,9 @@ import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import com.appdirect.oauth.account.entity.Account;
-import com.appdirect.oauth.account.entity.AccountStatus;
-import com.appdirect.oauth.account.repository.AccountRepository;
+import com.appdirect.account.entity.AccountEntity;
+import com.appdirect.account.entity.AccountStatus;
+import com.appdirect.account.repository.AccountRepository;
 import com.appdirect.subscription.entity.json.Company;
 import com.appdirect.subscription.entity.json.DetailsSubscription;
 import com.appdirect.subscription.entity.json.Payload;
@@ -66,7 +66,7 @@ public class CreateSubscriptionServiceTest {
       // Declare response as a String so the right signature is found
       String response = null;
       when(mapperMock.readValue(response, DetailsSubscription.class)).thenReturn(detailsSubscription);
-      Account account = createSubscription.createSubscription(DUMMY_URL);
+      AccountEntity account = createSubscription.createSubscription(DUMMY_URL);
       assertNotNull(account);
       // Since repository is not actually called
       assertNull(account.getId());

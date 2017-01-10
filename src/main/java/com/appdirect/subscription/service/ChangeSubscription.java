@@ -1,6 +1,6 @@
 package com.appdirect.subscription.service;
 
-import com.appdirect.oauth.account.entity.Account;
+import com.appdirect.account.entity.AccountEntity;
 
 @FunctionalInterface
 public interface ChangeSubscription {
@@ -14,7 +14,7 @@ public interface ChangeSubscription {
     * </ol> 
     * </p>
     * @param eventUrl
-    * @return the changed {@link Account}
+    * @return the changed {@link AccountEntity}
     */
-   Account changeSubscription(String eventUrl);
+   AccountEntity changeSubscription(String eventUrl);
 }

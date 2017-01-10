@@ -4,13 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.appdirect.account.entity.AccountEntity;
 import com.appdirect.subscription.entity.SubscriptionResponse;
 import com.appdirect.subscription.exception.SubscriptionException;
 import com.appdirect.subscription.service.CancelSubscription;
@@ -39,24 +39,24 @@ public class SubscriptionController {
       return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
    }
    
-   @Async
    @RequestMapping(path = "/create", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
    public ResponseEntity<SubscriptionResponse> createSubscription(@RequestParam("eventUrl") final String eventUrl, final Model model) {
       
       SubscriptionResponse createSubscriptionResponse;
       if(Strings.isNullOrEmpty(eventUrl)) {
          createSubscriptionResponse = new SubscriptionResponse("", null, "", EVENT_URL_IS_NULL);
-         return new ResponseEntity<SubscriptionResponse>(createSubscriptionResponse, HttpStatus.OK);
+         return new ResponseEntity<>(createSubscriptionResponse, HttpStatus.OK);
       }
 
+      AccountEntity account = null;
       try {
-         createSubscription.createSubscription(eventUrl);
+         account = createSubscription.createSubscription(eventUrl);
       } catch(SubscriptionException e) {
          createSubscriptionResponse = new SubscriptionResponse(false, null, "", "Error during subscription creation");
-         return new ResponseEntity<SubscriptionResponse>(createSubscriptionResponse, HttpStatus.OK);
+         return new ResponseEntity<>(createSubscriptionResponse, HttpStatus.OK);
       }
-      createSubscriptionResponse = new SubscriptionResponse(true, null, "", "Account created successfully");
-      return new ResponseEntity<SubscriptionResponse>(createSubscriptionResponse, HttpStatus.OK);
+      createSubscriptionResponse = new SubscriptionResponse(true, account.getId(), null, "Account created successfully");
+      return new ResponseEntity<>(createSubscriptionResponse, HttpStatus.OK);
    }
    
    @RequestMapping(path = "/cancel", method = {RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
@@ -70,17 +70,18 @@ public class SubscriptionController {
       SubscriptionResponse cancelSubscriptionResponse;
       if(Strings.isNullOrEmpty(eventUrl)) {
          cancelSubscriptionResponse = new SubscriptionResponse("", null, "", EVENT_URL_IS_NULL);
-         return new ResponseEntity<SubscriptionResponse>(cancelSubscriptionResponse, HttpStatus.OK);
+         return new ResponseEntity<>(cancelSubscriptionResponse, HttpStatus.OK);
       }
 
+      AccountEntity account = null;
       try {
-         cancelSubscription.cancelSubscription(eventUrl);
+         account = cancelSubscription.cancelSubscription(eventUrl);
       } catch(SubscriptionException e) {
          cancelSubscriptionResponse = new SubscriptionResponse(false, null, "", "Error during subscription cancellation");
-         return new ResponseEntity<SubscriptionResponse>(cancelSubscriptionResponse, HttpStatus.OK);
+         return new ResponseEntity<>(cancelSubscriptionResponse, HttpStatus.OK);
       }
-      cancelSubscriptionResponse = new SubscriptionResponse(true, null, "", "Account canceled successfully");
-      return new ResponseEntity<>(HttpStatus.OK);
+      cancelSubscriptionResponse = new SubscriptionResponse(true, account.getId(), null, "Account canceled successfully");
+      return new ResponseEntity<>(cancelSubscriptionResponse, HttpStatus.OK);
    }
    
    @RequestMapping(path = "/change", method = {RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
@@ -94,16 +95,17 @@ public class SubscriptionController {
       SubscriptionResponse changeSubscriptionResponse;
       if(Strings.isNullOrEmpty(eventUrl)) {
          changeSubscriptionResponse = new SubscriptionResponse("", null, "", EVENT_URL_IS_NULL);
-         return new ResponseEntity<SubscriptionResponse>(changeSubscriptionResponse, HttpStatus.OK);
+         return new ResponseEntity<>(changeSubscriptionResponse, HttpStatus.OK);
       }
       
+      AccountEntity account = null;
       try {
-         changeSubscription.changeSubscription(eventUrl);
+         account = changeSubscription.changeSubscription(eventUrl);
       } catch(SubscriptionException e) {
          changeSubscriptionResponse = new SubscriptionResponse(false, null, "", "Error during subscription changing");
-         return new ResponseEntity<SubscriptionResponse>(changeSubscriptionResponse, HttpStatus.OK);
+         return new ResponseEntity<>(changeSubscriptionResponse, HttpStatus.OK);
       }
-      changeSubscriptionResponse = new SubscriptionResponse(true, null, "", "Account changed successfully");
+      changeSubscriptionResponse = new SubscriptionResponse(true, account.getId(), null, "Account changed successfully");
       return new ResponseEntity<>(HttpStatus.OK);
    }
 
