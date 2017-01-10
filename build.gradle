@@ -38,12 +38,27 @@ dependencies {
 	compile 'oauth.signpost:signpost-core:1.2.1.2'
 	compile 'com.h2database:h2:1.4.193'
 	compile 'com.google.guava:guava:20.0'
-	compile 'com.sun.jersey.contribs.jersey-oauth:oauth-signature:1.9.1'
-	compile 'com.sun.jersey.contribs.jersey-oauth:oauth-server:1.9.1'
-	compile 'com.sun.jersey:jersey-server:1.9.1'
-	compile 'javax.ws.rs:javax.ws.rs-api:2.0'
+	compile 'org.springframework.security.oauth:spring-security-oauth:2.0.9.RELEASE'
+	compile 'com.github.jsimone:webapp-runner:8.5.5.2'
 	providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile 'org.powermock:powermock-mockito-release-full:1.6.4'
 	
 }
+
+task stage() {
+  dependsOn clean, war
+}
+tasks.stage.doLast() {
+  delete fileTree(dir: "build/libs", exclude: "*.war")
+}
+war.mustRunAfter clean
+
+task copyToLib(type: Copy) {
+  into "$buildDir/server"
+  from(configurations.compile) {
+    include "webapp-runner*"
+  }
+}
+
+stage.dependsOn(copyToLib)
