@@ -9,7 +9,11 @@ import org.springframework.stereotype.Service;
 
 import com.appdirect.model.account.entity.AccountEntity;
 import com.appdirect.model.account.repository.AccountRepository;
+import com.appdirect.model.item.entity.ItemEntity;
+import com.appdirect.model.order.entity.OrderEntity;
 import com.appdirect.subscription.entity.json.DetailsSubscription;
+import com.appdirect.subscription.entity.json.Item;
+import com.appdirect.subscription.entity.json.Order;
 import com.appdirect.subscription.exception.SubscriptionException;
 import com.appdirect.subscription.service.ChangeSubscription;
 import com.appdirect.subscription.service.RequestHandler;
@@ -59,7 +63,15 @@ public class ChangeSubscriptionService implements ChangeSubscription {
       if(account == null) {
          throw new SubscriptionException(ACTION, "Account with identifier " + accountIdentifier + " has not been found");
       }
-//      account.setStatus(AccountStatus.CANCELED.getStatus());
+      OrderEntity orderEntity = account.getOrder();
+      Order order = detailsSubscription.getPayload().getOrder();
+      orderEntity.setEditionCode(order.getEditionCode());
+      orderEntity.setPricingDuration(order.getPricingDuration());
+      orderEntity.getItems().clear();
+      for(Item item: order.getItems()) {
+         ItemEntity itemEntity = new ItemEntity(item.getQuantity(), item.getUnit());
+         orderEntity.getItems().add(itemEntity);
+      }
       accountRepository.save(account);
       LOGGER.debug("Account {} changed successfully", account.getName());
       return account;
