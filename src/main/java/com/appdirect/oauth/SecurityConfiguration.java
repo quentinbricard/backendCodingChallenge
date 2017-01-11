@@ -30,6 +30,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
    
    @PostConstruct
    public void init() {
+      // We need instance that are injected with Autowired annotation
+      // To have them, we need to wait the end of components construction
       oauthFilter = new OAuthFilter(oauthConsumerDetailsService, oAuthNonceServices(), oauthAuthenticationEntryPoint());
    }
 
@@ -42,6 +44,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
    public OAuthProcessingFilterEntryPoint oauthAuthenticationEntryPoint() {
        return new OAuthProcessingFilterEntryPoint();
    }
+   
    @Bean
    public OAuthProviderTokenServices oauthProviderTokenServices() {
       return new InMemoryProviderTokenServices();
@@ -49,6 +52,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
    
    @Override
    protected void configure(HttpSecurity http) throws Exception {
+      // Filter any request and requires role OAuth
       http.antMatcher("/**").addFilterBefore(oauthFilter, UsernamePasswordAuthenticationFilter.class).authorizeRequests().anyRequest().hasRole("OAUTH");
    }
 }

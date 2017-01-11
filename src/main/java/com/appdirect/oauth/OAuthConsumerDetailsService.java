@@ -14,7 +14,7 @@ import com.appdirect.oauth.exception.OAuthException;
 
 @Component
 public class OAuthConsumerDetailsService implements ConsumerDetailsService {
-   private final static Logger LOGGER = LoggerFactory.getLogger(OAuthConsumerDetailsService.class);
+   private static final Logger LOGGER = LoggerFactory.getLogger(OAuthConsumerDetailsService.class);
 
    @Value("${oauth.consumer.key}")
    private String oauthKey;
@@ -27,11 +27,9 @@ public class OAuthConsumerDetailsService implements ConsumerDetailsService {
       if(!oauthKey.equals(consumerKey)) {
          throw new OAuthException("Signature validation failed");
       }
-      BaseConsumerDetails baseConsumerDetails;
-      baseConsumerDetails = new BaseConsumerDetails();
+      BaseConsumerDetails baseConsumerDetails = new BaseConsumerDetails();
       baseConsumerDetails.setConsumerKey(consumerKey);
       baseConsumerDetails.setSignatureSecret(new SharedConsumerSecretImpl(oauthSecret));
-      // baseConsumerDetails.setConsumerName("Sample");
       baseConsumerDetails.setRequiredToObtainAuthenticatedToken(false);
       baseConsumerDetails.getAuthorities().add(new SimpleGrantedAuthority("ROLE_OAUTH"));
       LOGGER.info("OAuth signature validated successfully");

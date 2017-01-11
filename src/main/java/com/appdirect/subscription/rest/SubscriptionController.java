@@ -1,5 +1,7 @@
 package com.appdirect.subscription.rest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,8 +23,10 @@ import com.google.common.base.Strings;
 @RestController
 @RequestMapping("/subscriptions")
 public class SubscriptionController {
-
+   
+   private static final Logger LOGGER = LoggerFactory.getLogger(SubscriptionController.class);
    private static final String EVENT_URL_IS_NULL = "Event url is null";
+   
    private final CreateSubscription createSubscription;
    private final CancelSubscription cancelSubscription;
    private final ChangeSubscription changeSubscription;
@@ -42,21 +46,18 @@ public class SubscriptionController {
    @RequestMapping(path = "/create", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
    public ResponseEntity<SubscriptionResponse> createSubscription(@RequestParam("eventUrl") final String eventUrl, final Model model) {
       
-      SubscriptionResponse createSubscriptionResponse;
       if(Strings.isNullOrEmpty(eventUrl)) {
-         createSubscriptionResponse = new SubscriptionResponse("", null, "", EVENT_URL_IS_NULL);
-         return new ResponseEntity<>(createSubscriptionResponse, HttpStatus.OK);
+         return buildResponseEntityFromSubscriptionResponse(false, null, "", EVENT_URL_IS_NULL, HttpStatus.OK);
       }
 
       AccountEntity account = null;
       try {
          account = createSubscription.createSubscription(eventUrl);
       } catch(SubscriptionException e) {
-         createSubscriptionResponse = new SubscriptionResponse(false, null, "", "Error during subscription creation");
-         return new ResponseEntity<>(createSubscriptionResponse, HttpStatus.OK);
+         LOGGER.error("Error during subscription creation", e);
+         return buildResponseEntityFromSubscriptionResponse(false, null, "", "Error during subscription creation", HttpStatus.OK);
       }
-      createSubscriptionResponse = new SubscriptionResponse(true, account.getId(), null, "Account created successfully");
-      return new ResponseEntity<>(createSubscriptionResponse, HttpStatus.OK);
+      return buildResponseEntityFromSubscriptionResponse(true, account.getId(), null, "Account created successfully", HttpStatus.OK);
    }
    
    @RequestMapping(path = "/cancel", method = {RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
@@ -67,21 +68,18 @@ public class SubscriptionController {
    @RequestMapping(path = "/cancel", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
    public ResponseEntity<SubscriptionResponse> cancelSubscription(@RequestParam("eventUrl") final String eventUrl, final Model model) {
       
-      SubscriptionResponse cancelSubscriptionResponse;
       if(Strings.isNullOrEmpty(eventUrl)) {
-         cancelSubscriptionResponse = new SubscriptionResponse("", null, "", EVENT_URL_IS_NULL);
-         return new ResponseEntity<>(cancelSubscriptionResponse, HttpStatus.OK);
+         return buildResponseEntityFromSubscriptionResponse(false, null, "", EVENT_URL_IS_NULL, HttpStatus.OK);
       }
 
       AccountEntity account = null;
       try {
          account = cancelSubscription.cancelSubscription(eventUrl);
       } catch(SubscriptionException e) {
-         cancelSubscriptionResponse = new SubscriptionResponse(false, null, "", "Error during subscription cancellation");
-         return new ResponseEntity<>(cancelSubscriptionResponse, HttpStatus.OK);
+         LOGGER.error("Error during subscription cancellation", e);
+         return buildResponseEntityFromSubscriptionResponse(false, null, "", "Error during subscription cancellation", HttpStatus.OK);
       }
-      cancelSubscriptionResponse = new SubscriptionResponse(true, account.getId(), null, "Account canceled successfully");
-      return new ResponseEntity<>(cancelSubscriptionResponse, HttpStatus.OK);
+      return buildResponseEntityFromSubscriptionResponse(true, account.getId(), null, "Account canceled successfully", HttpStatus.OK);
    }
    
    @RequestMapping(path = "/change", method = {RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
@@ -92,21 +90,23 @@ public class SubscriptionController {
    @RequestMapping(path = "/change", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
    public ResponseEntity<SubscriptionResponse> changeSubscription(@RequestParam("eventUrl") final String eventUrl, final Model model) {
       
-      SubscriptionResponse changeSubscriptionResponse;
       if(Strings.isNullOrEmpty(eventUrl)) {
-         changeSubscriptionResponse = new SubscriptionResponse("", null, "", EVENT_URL_IS_NULL);
-         return new ResponseEntity<>(changeSubscriptionResponse, HttpStatus.OK);
+         return buildResponseEntityFromSubscriptionResponse(false, null, "", EVENT_URL_IS_NULL, HttpStatus.OK);
       }
       
       AccountEntity account = null;
       try {
          account = changeSubscription.changeSubscription(eventUrl);
       } catch(SubscriptionException e) {
-         changeSubscriptionResponse = new SubscriptionResponse(false, null, "", "Error during subscription changing");
-         return new ResponseEntity<>(changeSubscriptionResponse, HttpStatus.OK);
+         LOGGER.error("Error during subscription change", e);
+         return buildResponseEntityFromSubscriptionResponse(false, null, "", "Error during subscription changing", HttpStatus.OK);
       }
-      changeSubscriptionResponse = new SubscriptionResponse(true, account.getId(), null, "Account changed successfully");
-      return new ResponseEntity<>(changeSubscriptionResponse, HttpStatus.OK);
+      return buildResponseEntityFromSubscriptionResponse(true, account.getId(), null, "Account changed successfully", HttpStatus.OK);
    }
-
+   
+   private ResponseEntity<SubscriptionResponse> buildResponseEntityFromSubscriptionResponse(boolean success, 
+         String accountIdentifier, String errorCode, String message, HttpStatus httpStatus) {
+      SubscriptionResponse changeSubscriptionResponse = new SubscriptionResponse(success, accountIdentifier, errorCode, message);
+      return new ResponseEntity<>(changeSubscriptionResponse, httpStatus);
+   }
 }

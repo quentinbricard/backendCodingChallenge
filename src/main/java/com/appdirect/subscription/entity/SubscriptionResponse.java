@@ -22,7 +22,7 @@ public class SubscriptionResponse {
     * @param message message (optional)
     */
    public SubscriptionResponse(boolean success, String accountIdentifier, String errorCode, String message) {
-      this(Boolean.valueOf(success).toString().toLowerCase(), accountIdentifier, errorCode, message);
+      this(Boolean.toString(success).toLowerCase(), accountIdentifier, errorCode, message);
    }
    
    /**

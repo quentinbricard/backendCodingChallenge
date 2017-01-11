@@ -6,6 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class BackendCodingChallengeApplication {
 
+   private BackendCodingChallengeApplication() {}
+   
 	public static void main(String[] args) {
 		SpringApplication.run(BackendCodingChallengeApplication.class, args);
 	}

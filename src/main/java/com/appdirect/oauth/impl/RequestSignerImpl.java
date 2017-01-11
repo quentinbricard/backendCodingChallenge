@@ -32,6 +32,10 @@ public class RequestSignerImpl implements RequestSigner {
    @Value("${oauth.consumer.secret}")
    private String oauthSecret;
    
+   /*
+    * (non-Javadoc)
+    * @see com.appdirect.oauth.RequestSigner#getSignedConnection(java.lang.String)
+    */
    public HttpURLConnection getSignedConnection(final String requestedUrl) {
       LOGGER.debug("Creating connection for URL {}...", requestedUrl);
       OAuthConsumer consumer = new DefaultOAuthConsumer(oauthKey, oauthSecret);
