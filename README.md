@@ -22,9 +22,9 @@ This application ties to the following end-points:
 
 * Due to security purpose, the application doesn't work on localhost.
 * To bypass this issue, I used [ngrok](https://ngrok.com/) which enables tunneling to localhost.
-* You can run it with:\n
+* You can run it with:<br />
 `./ngrok http 8080`
-* Then the resulting URL should be displayed like:\n
+* Then the resulting URL should be displayed like:<br />
 `Forwarding                    http://179d8139.ngrok.io -> localhost:8080`
 * The URL is the one which needs to be used in integration settings
 
@@ -39,13 +39,13 @@ This application ties to the following end-points:
 * If OAuth request validation fails (no authorization header, wrong key, etc), a 403 error is returned (Forbidden)
 * If other verb than GET is used to handle requests, 405 status is returned (METHOD_NOT_ALLOWED)
 * Every other requests return a 200 status (OK) with a success flag and an errorcode (if applicable), as asked in specifications
-* Here are the different error codes handled by this application:\n
-*- ACCOUNT\_NOT\_FOUND: returned when no account is found upon the accountIdentifier sent by Appdirect\n
-*- INVALID\_RESPONSE: returned when an error occurs during Appdirect response parsing\n
-*- TRANSPORT\_ERROR: returned when an error occurs during request signature\n
-*- TRANSPORT\_ERROR: returned when an error occurs during request signature\n
-*- FORBIDDEN: returned when an endpoint is called with eventUrl parameter\n
-*- UNKNOWN\_ERROR: returned when an unexpected error occurs\n
+* Here are the different error codes handled by this application:<br />
+*- ACCOUNT\_NOT\_FOUND: returned when no account is found upon the accountIdentifier sent by Appdirect<br />
+*- INVALID\_RESPONSE: returned when an error occurs during Appdirect response parsing<br />
+*- TRANSPORT\_ERROR: returned when an error occurs during request signature<br />
+*- TRANSPORT\_ERROR: returned when an error occurs during request signature<br />
+*- FORBIDDEN: returned when an endpoint is called with eventUrl parameter<br />
+*- UNKNOWN\_ERROR: returned when an unexpected error occurs<br />
 
 ## Technical implementation
 
@@ -59,9 +59,9 @@ This application ties to the following end-points:
 ## Limitations
 
 * Not all information received by Appdirect is stored in database
-* In particular, the creator of a subscription is not saved.\n
+* In particular, the creator of a subscription is not saved.<br />
 As a result, when assigning a user, the application doesn't check if the user is different from the creator.
 * When receiving responses from Appdirect, there is no validation on the unique identifier of the event
-* These endpoints have not been implemented:\n
-*- Change subscription
-*- User Update
+* These endpoints have not been implemented:<br />
+*- Change subscription<br />
+*- User Update<br />
