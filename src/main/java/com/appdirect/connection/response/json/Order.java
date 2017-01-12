@@ -1,4 +1,4 @@
-package com.appdirect.subscription.entity.json;
+package com.appdirect.connection.response.json;
 
 import java.util.HashMap;
 import java.util.List;

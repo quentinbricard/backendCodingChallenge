@@ -1,4 +1,4 @@
-package com.appdirect.subscription.service;
+package com.appdirect.connection.request;
 
 @FunctionalInterface
 public interface RequestHandler {

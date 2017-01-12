@@ -1,4 +1,4 @@
-package com.appdirect.subscription.entity.json;
+package com.appdirect.connection.response.json;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 public class Payload {
 
    @JsonProperty("user")
-   private Object user;
+   private User user;
    @JsonProperty("company")
    private Company company;
    @JsonProperty("account")
@@ -31,15 +31,15 @@ public class Payload {
    @JsonProperty("configuration")
    private Configuration configuration;
    @JsonIgnore
-   private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+   private Map<String, Object> additionalProperties = new HashMap<>();
 
    @JsonProperty("user")
-   public Object getUser() {
+   public User getUser() {
       return user;
    }
 
    @JsonProperty("user")
-   public void setUser(Object user) {
+   public void setUser(User user) {
       this.user = user;
    }
 

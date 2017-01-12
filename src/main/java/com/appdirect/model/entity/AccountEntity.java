@@ -1,16 +1,19 @@
-package com.appdirect.model.account.entity;
+package com.appdirect.model.entity;
+
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import com.appdirect.model.order.entity.OrderEntity;
+import com.beust.jcommander.internal.Lists;
 
 @Entity
 @Table(name="accounts")
@@ -20,6 +23,7 @@ public class AccountEntity {
    private String name;
    private int status;
    private OrderEntity order;
+   private List<UserEntity> users = Lists.newArrayList();
    
    /**
     * Empty constructor
@@ -70,5 +74,15 @@ public class AccountEntity {
 
    public void setOrder(OrderEntity order) {
       this.order = order;
+   }
+   
+   @OneToMany(cascade = CascadeType.ALL)
+   public List<UserEntity> getUsers() {
+      return users;
+   }
+
+   @SuppressWarnings("unused")
+   private void setUsers(List<UserEntity> users) {
+      this.users = users;
    }
 }

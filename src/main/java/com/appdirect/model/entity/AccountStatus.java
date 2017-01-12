@@ -1,4 +1,4 @@
-package com.appdirect.model.account.entity;
+package com.appdirect.model.entity;
 
 /**
  * <p>Enumeration to represent the status of an account.</p>

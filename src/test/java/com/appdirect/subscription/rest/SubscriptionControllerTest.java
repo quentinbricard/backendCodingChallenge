@@ -11,7 +11,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import com.appdirect.model.account.entity.AccountEntity;
+import com.appdirect.model.entity.AccountEntity;
 import com.appdirect.subscription.service.CancelSubscription;
 import com.appdirect.subscription.service.ChangeSubscription;
 import com.appdirect.subscription.service.CreateSubscription;

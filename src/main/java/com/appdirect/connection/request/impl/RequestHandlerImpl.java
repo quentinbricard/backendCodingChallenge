@@ -1,4 +1,4 @@
-package com.appdirect.subscription.service.impl;
+package com.appdirect.connection.request.impl;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -13,10 +13,10 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
 
+import com.appdirect.connection.error.ErrorCodes;
+import com.appdirect.connection.request.RequestHandler;
 import com.appdirect.oauth.RequestSigner;
-import com.appdirect.subscription.exception.ErrorCodes;
 import com.appdirect.subscription.exception.SubscriptionException;
-import com.appdirect.subscription.service.RequestHandler;
 import com.google.common.net.HttpHeaders;
 
 /**

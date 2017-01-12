@@ -1,4 +1,4 @@
-package com.appdirect.subscription.entity;
+package com.appdirect.connection.response;
 
 import com.google.common.base.Preconditions;
 
@@ -7,7 +7,7 @@ import com.google.common.base.Preconditions;
  * @author quentinbricard
  *
  */
-public class SubscriptionResponse {
+public class Response {
    
    private String success;
    private String accountIdentifier;
@@ -21,7 +21,7 @@ public class SubscriptionResponse {
     * @param errorCode errorCode if any
     * @param message message (optional)
     */
-   public SubscriptionResponse(boolean success, String accountIdentifier, String errorCode, String message) {
+   public Response(boolean success, String accountIdentifier, String errorCode, String message) {
       this(Boolean.toString(success).toLowerCase(), accountIdentifier, errorCode, message);
    }
    
@@ -32,7 +32,7 @@ public class SubscriptionResponse {
     * @param errorCode errorCode if any
     * @param message message (optional)
     */
-   public SubscriptionResponse(String success, String accountIdentifier, String errorCode, String message) {
+   public Response(String success, String accountIdentifier, String errorCode, String message) {
       Preconditions.checkNotNull(success, "success field must not be null");
       this.success = success;
       this.accountIdentifier = accountIdentifier;

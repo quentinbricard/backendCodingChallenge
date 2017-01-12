@@ -17,14 +17,15 @@ import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import com.appdirect.model.account.entity.AccountEntity;
-import com.appdirect.model.account.entity.AccountStatus;
-import com.appdirect.model.account.repository.AccountRepository;
-import com.appdirect.subscription.entity.json.Company;
-import com.appdirect.subscription.entity.json.DetailsSubscription;
-import com.appdirect.subscription.entity.json.Order;
-import com.appdirect.subscription.entity.json.Payload;
-import com.appdirect.subscription.exception.ErrorCodes;
+import com.appdirect.connection.error.ErrorCodes;
+import com.appdirect.connection.request.RequestHandler;
+import com.appdirect.connection.response.json.Company;
+import com.appdirect.connection.response.json.Order;
+import com.appdirect.connection.response.json.Payload;
+import com.appdirect.connection.response.json.Details;
+import com.appdirect.model.entity.AccountEntity;
+import com.appdirect.model.entity.AccountStatus;
+import com.appdirect.model.repository.AccountRepository;
 import com.appdirect.subscription.exception.SubscriptionException;
 import com.appdirect.subscription.service.impl.CreateSubscriptionService;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -46,7 +47,7 @@ public class CreateSubscriptionServiceTest {
    @Mock
    private ObjectMapper mapperMock;
    
-   private DetailsSubscription detailsSubscription;
+   private Details detailsSubscription;
    
    @Before
    public void setUp() throws Exception {
@@ -55,7 +56,7 @@ public class CreateSubscriptionServiceTest {
       whenNew(ObjectMapper.class).withNoArguments().thenReturn(mapperMock);
       createSubscription = new CreateSubscriptionService(requestHandlerMock, accountRepositoryMock);
       
-      detailsSubscription = new DetailsSubscription();
+      detailsSubscription = new Details();
       Payload payload = new Payload();
       Company company = new Company();
       company.setName(COMPANY_NAME);
@@ -69,7 +70,7 @@ public class CreateSubscriptionServiceTest {
    public void testCreationSuccessful() throws JsonParseException, JsonMappingException, IOException {
       // Declare response as a String so the right signature is found
       String response = null;
-      when(mapperMock.readValue(response, DetailsSubscription.class)).thenReturn(detailsSubscription);
+      when(mapperMock.readValue(response, Details.class)).thenReturn(detailsSubscription);
       AccountEntity account = createSubscription.createSubscription(DUMMY_URL);
       assertNotNull(account);
       // Since repository is not actually called
@@ -83,7 +84,7 @@ public class CreateSubscriptionServiceTest {
    public void testErrorJSon() throws JsonParseException, JsonMappingException, IOException {
       // Declare response as a String so the right signature is found
       String response = null;
-      when(mapperMock.readValue(response, DetailsSubscription.class)).thenThrow(IOException.class);
+      when(mapperMock.readValue(response, Details.class)).thenThrow(IOException.class);
       try {
          createSubscription.createSubscription(DUMMY_URL);
          fail("An exception should have occured");

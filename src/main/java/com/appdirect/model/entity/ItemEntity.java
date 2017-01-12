@@ -1,4 +1,4 @@
-package com.appdirect.model.item.entity;
+package com.appdirect.model.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

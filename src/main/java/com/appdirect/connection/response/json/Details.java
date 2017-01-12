@@ -1,4 +1,4 @@
-package com.appdirect.subscription.entity.json;
+package com.appdirect.connection.response.json;
 
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "type", "marketplace", "applicationUuid", "flag", "creator", "payload", "returnUrl", "links" })
-public class DetailsSubscription {
+public class Details {
 
    @JsonProperty("type")
    private String type;
@@ -32,7 +32,7 @@ public class DetailsSubscription {
    @JsonProperty("links")
    private List<Object> links = null;
    @JsonIgnore
-   private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+   private Map<String, Object> additionalProperties = new HashMap<>();
 
    @JsonProperty("type")
    public String getType() {

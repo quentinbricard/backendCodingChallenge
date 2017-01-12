@@ -19,11 +19,12 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.FileCopyUtils;
 
+import com.appdirect.connection.error.ErrorCodes;
+import com.appdirect.connection.request.RequestHandler;
+import com.appdirect.connection.request.impl.RequestHandlerImpl;
 import com.appdirect.oauth.RequestSigner;
 import com.appdirect.oauth.impl.RequestSignerImpl;
-import com.appdirect.subscription.exception.ErrorCodes;
 import com.appdirect.subscription.exception.SubscriptionException;
-import com.appdirect.subscription.service.impl.RequestHandlerImpl;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(FileCopyUtils.class)

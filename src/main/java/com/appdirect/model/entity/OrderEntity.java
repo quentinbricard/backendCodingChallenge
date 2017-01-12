@@ -1,4 +1,4 @@
-package com.appdirect.model.order.entity;
+package com.appdirect.model.entity;
 
 import java.util.List;
 
@@ -12,7 +12,6 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import com.appdirect.model.item.entity.ItemEntity;
 import com.google.common.collect.Lists;
 
 @Entity

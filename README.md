@@ -37,11 +37,14 @@ This application ties to the following end-points:
 ## Error handling
 
 * If OAuth request validation fails (no authorization header, wrong key, etc), a 403 error is returned (Forbidden)
+* If other verb than GET is used to handle requests, 405 status is returned (METHOD_NOT_ALLOWED)
 * Every other requests return a 200 status (OK) with a success flag and an errorcode (if applicable), as asked in specifications
 * Here are the different error codes handled by this application:\n
 *- ACCOUNT\_NOT\_FOUND: returned when no account is found upon the accountIdentifier sent by Appdirect\n
 *- INVALID\_RESPONSE: returned when an error occurs during Appdirect response parsing\n
 *- TRANSPORT\_ERROR: returned when an error occurs during request signature\n
+*- TRANSPORT\_ERROR: returned when an error occurs during request signature\n
+*- FORBIDDEN: returned when an endpoint is called with eventUrl parameter\n
 *- UNKNOWN\_ERROR: returned when an unexpected error occurs\n
 
 ## Technical implementation
@@ -53,3 +56,12 @@ This application ties to the following end-points:
 * *OAuth signpost* is used to sign outgoing connections to Appdirect marketplace
 * *Mockito* and *PowerMock* are used for unit testing purposes
 
+## Limitations
+
+* Not all information received by Appdirect is stored in database
+* In particular, the creator of a subscription is not saved.\n
+As a result, when assigning a user, the application doesn't check if the user is different from the creator.
+* When receiving responses from Appdirect, there is no validation on the unique identifier of the event
+* These endpoints have not been implemented:\n
+*- Change subscription
+*- User Update
