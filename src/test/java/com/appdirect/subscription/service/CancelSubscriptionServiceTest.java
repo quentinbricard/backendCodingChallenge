@@ -22,6 +22,7 @@ import com.appdirect.model.account.entity.AccountStatus;
 import com.appdirect.model.account.repository.AccountRepository;
 import com.appdirect.subscription.entity.json.DetailsSubscription;
 import com.appdirect.subscription.entity.json.Payload;
+import com.appdirect.subscription.exception.ErrorCodes;
 import com.appdirect.subscription.exception.SubscriptionException;
 import com.appdirect.subscription.service.impl.CancelSubscriptionService;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -100,6 +101,7 @@ public class CancelSubscriptionServiceTest {
          fail("An exception should have occured");
       } catch(SubscriptionException e) {
          assertEquals(CancelSubscription.ACTION, e.getAction());
+         assertEquals(ErrorCodes.ACCOUNT_NOT_FOUND, e.getErrorCode());
       }
    }
 }

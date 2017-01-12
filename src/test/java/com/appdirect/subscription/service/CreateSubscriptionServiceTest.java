@@ -22,7 +22,9 @@ import com.appdirect.model.account.entity.AccountStatus;
 import com.appdirect.model.account.repository.AccountRepository;
 import com.appdirect.subscription.entity.json.Company;
 import com.appdirect.subscription.entity.json.DetailsSubscription;
+import com.appdirect.subscription.entity.json.Order;
 import com.appdirect.subscription.entity.json.Payload;
+import com.appdirect.subscription.exception.ErrorCodes;
 import com.appdirect.subscription.exception.SubscriptionException;
 import com.appdirect.subscription.service.impl.CreateSubscriptionService;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -57,6 +59,8 @@ public class CreateSubscriptionServiceTest {
       Payload payload = new Payload();
       Company company = new Company();
       company.setName(COMPANY_NAME);
+      Order order = new Order();
+      payload.setOrder(order);
       payload.setCompany(company);
       detailsSubscription.setPayload(payload);
    }
@@ -85,6 +89,7 @@ public class CreateSubscriptionServiceTest {
          fail("An exception should have occured");
       } catch(SubscriptionException e) {
          assertEquals(CreateSubscription.ACTION, e.getAction());
+         assertEquals(ErrorCodes.INVALID_RESPONSE, e.getErrorCode());
       }
    }
 }

@@ -15,6 +15,7 @@ import com.appdirect.model.order.entity.OrderEntity;
 import com.appdirect.subscription.entity.json.DetailsSubscription;
 import com.appdirect.subscription.entity.json.Item;
 import com.appdirect.subscription.entity.json.Order;
+import com.appdirect.subscription.exception.ErrorCodes;
 import com.appdirect.subscription.exception.SubscriptionException;
 import com.appdirect.subscription.service.CreateSubscription;
 import com.appdirect.subscription.service.RequestHandler;
@@ -56,7 +57,7 @@ public class CreateSubscriptionService implements CreateSubscription {
       try {
          detailsSubscription = mapper.readValue(responseData, DetailsSubscription.class);
       } catch(IOException e) {
-         throw new SubscriptionException(ACTION, "Error mapping json " + responseData + " to object", e);
+         throw new SubscriptionException(ACTION, "Error mapping json " + responseData + " to object", ErrorCodes.INVALID_RESPONSE, e);
       }
       // Create account from json
       AccountEntity account = new AccountEntity(detailsSubscription.getPayload().getCompany().getName(), AccountStatus.FREE_TRIAL.getStatus());

@@ -20,8 +20,12 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import com.appdirect.model.account.entity.AccountEntity;
 import com.appdirect.model.account.entity.AccountStatus;
 import com.appdirect.model.account.repository.AccountRepository;
+import com.appdirect.model.order.entity.OrderEntity;
+import com.appdirect.subscription.entity.json.Account;
 import com.appdirect.subscription.entity.json.DetailsSubscription;
+import com.appdirect.subscription.entity.json.Order;
 import com.appdirect.subscription.entity.json.Payload;
+import com.appdirect.subscription.exception.ErrorCodes;
 import com.appdirect.subscription.exception.SubscriptionException;
 import com.appdirect.subscription.service.impl.ChangeSubscriptionService;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -29,7 +33,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(ChangeSubscription.class)
+@PrepareForTest(ChangeSubscriptionService.class)
 public class ChangeSubscriptionServiceTest {
 
    private static final String ACCOUNT_ID = "accountId";
@@ -55,15 +59,19 @@ public class ChangeSubscriptionServiceTest {
       
       detailsSubscription = new DetailsSubscription();
       Payload payload = new Payload();
-      com.appdirect.subscription.entity.json.Account account = new com.appdirect.subscription.entity.json.Account();
+      Account account = new Account();
       account.setAccountIdentifier(ACCOUNT_ID);
       payload.setAccount(account);
+      Order order = new Order();
+      payload.setOrder(order);
       detailsSubscription.setPayload(payload);
    }
    
    @Test
    public void testChangeSuccessful() throws JsonParseException, JsonMappingException, IOException {
       AccountEntity account = new AccountEntity(COMPANY_NAME, AccountStatus.FREE_TRIAL.getStatus());
+      OrderEntity order = new OrderEntity();
+      account.setOrder(order);
       when(accountRepositoryMock.findById(ACCOUNT_ID)).thenReturn(account);
       // Declare response as a String so the right signature is found
       String response = null;
@@ -73,7 +81,7 @@ public class ChangeSubscriptionServiceTest {
       // Since repository is not actually called
       assertNull(account.getId());
       assertEquals(COMPANY_NAME, account.getName());
-      assertEquals(AccountStatus.CANCELED.getStatus(), account.getStatus());
+      assertEquals(AccountStatus.FREE_TRIAL.getStatus(), account.getStatus());
    }
    
    @SuppressWarnings("unchecked")
@@ -100,6 +108,7 @@ public class ChangeSubscriptionServiceTest {
          fail("An exception should have occured");
       } catch(SubscriptionException e) {
          assertEquals(ChangeSubscription.ACTION, e.getAction());
+         assertEquals(ErrorCodes.ACCOUNT_NOT_FOUND, e.getErrorCode());
       }
    }
 }

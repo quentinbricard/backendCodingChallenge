@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
 
 import com.appdirect.oauth.RequestSigner;
+import com.appdirect.subscription.exception.ErrorCodes;
 import com.appdirect.subscription.exception.SubscriptionException;
 import com.appdirect.subscription.service.RequestHandler;
 import com.google.common.net.HttpHeaders;
@@ -60,7 +61,7 @@ public class RequestHandlerImpl implements RequestHandler {
             LOGGER.debug("Response: {}", responseData);
          }
       } catch(IOException e) {
-         throw new SubscriptionException(action, "Error connection to URL " + url, e);
+         throw new SubscriptionException(action, "Error connection to URL " + url, ErrorCodes.TRANSPORT_ERROR, e);
       }
       return responseData;
    }

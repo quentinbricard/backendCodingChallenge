@@ -11,6 +11,7 @@ import com.appdirect.model.account.entity.AccountEntity;
 import com.appdirect.model.account.entity.AccountStatus;
 import com.appdirect.model.account.repository.AccountRepository;
 import com.appdirect.subscription.entity.json.DetailsSubscription;
+import com.appdirect.subscription.exception.ErrorCodes;
 import com.appdirect.subscription.exception.SubscriptionException;
 import com.appdirect.subscription.service.CancelSubscription;
 import com.appdirect.subscription.service.RequestHandler;
@@ -52,13 +53,13 @@ public class CancelSubscriptionService implements CancelSubscription {
       try {
          detailsSubscription = mapper.readValue(responseData, DetailsSubscription.class);
       } catch(IOException e) {
-         throw new SubscriptionException(ACTION, "Error mapping json " + responseData + " to object", e);
+         throw new SubscriptionException(ACTION, "Error mapping json " + responseData + " to object", ErrorCodes.INVALID_RESPONSE, e);
       }
       // retrieve account
       String accountIdentifier = detailsSubscription.getPayload().getAccount().getAccountIdentifier();
       AccountEntity account = accountRepository.findById(accountIdentifier);
       if(account == null) {
-         throw new SubscriptionException(ACTION, "Account with identifier " + accountIdentifier + " has not been found");
+         throw new SubscriptionException(ACTION, "Account with identifier " + accountIdentifier + " has not been found", ErrorCodes.ACCOUNT_NOT_FOUND);
       }
       account.setStatus(AccountStatus.CANCELED.getStatus());
       accountRepository.save(account);

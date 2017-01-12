@@ -21,6 +21,7 @@ import org.springframework.util.FileCopyUtils;
 
 import com.appdirect.oauth.RequestSigner;
 import com.appdirect.oauth.impl.RequestSignerImpl;
+import com.appdirect.subscription.exception.ErrorCodes;
 import com.appdirect.subscription.exception.SubscriptionException;
 import com.appdirect.subscription.service.impl.RequestHandlerImpl;
 
@@ -55,6 +56,7 @@ public class RequestHandlerTest {
          assertEquals(ACTION, e.getAction());
          assertNotNull(e.getCause());
          assertEquals(IOException.class, e.getCause().getClass());
+         assertEquals(ErrorCodes.TRANSPORT_ERROR, e.getErrorCode());
       }
    }
    

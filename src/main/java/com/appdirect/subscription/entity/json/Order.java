@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.beust.jcommander.internal.Lists;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -22,9 +23,9 @@ public class Order {
    @JsonProperty("pricingDuration")
    private String pricingDuration;
    @JsonProperty("items")
-   private List<Item> items = null;
+   private List<Item> items = Lists.newArrayList();
    @JsonIgnore
-   private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+   private Map<String, Object> additionalProperties = new HashMap<>();
 
    @JsonProperty("editionCode")
    public String getEditionCode() {

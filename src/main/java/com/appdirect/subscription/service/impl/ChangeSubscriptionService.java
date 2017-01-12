@@ -14,6 +14,7 @@ import com.appdirect.model.order.entity.OrderEntity;
 import com.appdirect.subscription.entity.json.DetailsSubscription;
 import com.appdirect.subscription.entity.json.Item;
 import com.appdirect.subscription.entity.json.Order;
+import com.appdirect.subscription.exception.ErrorCodes;
 import com.appdirect.subscription.exception.SubscriptionException;
 import com.appdirect.subscription.service.ChangeSubscription;
 import com.appdirect.subscription.service.RequestHandler;
@@ -55,13 +56,13 @@ public class ChangeSubscriptionService implements ChangeSubscription {
       try {
          detailsSubscription = mapper.readValue(responseData, DetailsSubscription.class);
       } catch(IOException e) {
-         throw new SubscriptionException(ACTION, "Error mapping json " + responseData + " to object", e);
+         throw new SubscriptionException(ACTION, "Error mapping json " + responseData + " to object", ErrorCodes.INVALID_RESPONSE, e);
       }
       // retrieve account
       String accountIdentifier = detailsSubscription.getPayload().getAccount().getAccountIdentifier();
       AccountEntity account = accountRepository.findById(accountIdentifier);
       if(account == null) {
-         throw new SubscriptionException(ACTION, "Account with identifier " + accountIdentifier + " has not been found");
+         throw new SubscriptionException(ACTION, "Account with identifier " + accountIdentifier + " has not been found", ErrorCodes.ACCOUNT_NOT_FOUND);
       }
       OrderEntity orderEntity = account.getOrder();
       Order order = detailsSubscription.getPayload().getOrder();
